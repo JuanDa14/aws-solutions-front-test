@@ -1,10 +1,10 @@
 import { forwardRef } from 'react';
 import { cn } from '../../lib/utils';
 
-export const Input = forwardRef(({ id, type, label, className, ...props }, ref) => {
+export const Input = forwardRef(({ className, ...props }, ref) => {
 	return (
 		<div className='relative'>
-			{type === 'search' && (
+			{props.type === 'search' && (
 				<span className='absolute left-3 top-0 bottom-0 flex items-center justify-center cursor-pointer'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
@@ -26,13 +26,10 @@ export const Input = forwardRef(({ id, type, label, className, ...props }, ref) 
 				className={cn(
 					'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
 					className,
-					type === 'search' && 'pl-10'
+					props.type === 'search' && 'pl-10'
 				)}
 				ref={ref}
-				type={type}
-				id={id}
 				min={0}
-				autoComplete='off'
 				onWheel={(e) => e.currentTarget.blur()}
 				{...props}
 			/>
