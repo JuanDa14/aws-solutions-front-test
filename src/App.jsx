@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
+import { getProducts } from './services/api';
 
 function App() {
 	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		const loadProducts = async () => {
+			try {
+				const data = await getProducts();
+				console.log({ data });
+			} catch (error) {
+				console.log('[getProducts]', error);
+			} finally {
+			}
+		};
+		loadProducts();
+	}, []);
 
 	return (
 		<>
