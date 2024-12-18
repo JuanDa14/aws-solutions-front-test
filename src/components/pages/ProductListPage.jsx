@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
+import { Input } from '../ui/Input';
 import { getProducts } from '../../services/api';
 import { ProductItem } from '../views/ProductItem';
-import { Input } from '../ui/Input';
+import { ProductListPageSkeleton } from '../views/ProductListPageSkeleton';
 
 export const ProductListPage = () => {
 	const [products, setProducts] = useState([]);
@@ -16,6 +17,7 @@ export const ProductListPage = () => {
 				const data = await getProducts();
 				setProducts(data);
 			} catch (error) {
+				console.log('[getProducts]', error);
 				toast.error('Error fetching products.');
 			} finally {
 				setLoading(false);
@@ -30,7 +32,7 @@ export const ProductListPage = () => {
 			product.model.toLowerCase().includes(search.toLowerCase())
 	);
 
-	if (loading) return <div>Cargando...</div>;
+	if (loading) return <ProductListPageSkeleton />;
 
 	return (
 		<div className='max-w-7xl mx-auto mt-10 mb-10 px-5'>

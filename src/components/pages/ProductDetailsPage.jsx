@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PlusIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { Card, CardContent } from '../../components/ui/Card';
 import {
 	Select,
@@ -11,32 +12,52 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '../../components/ui/Select';
-import { Label } from '../../components/ui/Label';
-import { getProductDetails } from '../../services/api';
-import { cn } from '../../lib/utils';
 import { Button, buttonVariants } from '../ui/Button';
+import { Label } from '../../components/ui/Label';
+import { addToCart, getProductDetails } from '../../services/api';
+import { useCart } from '../providers/CartProvider';
+import { ProductDetailsPageSkeleton } from '../views/ProductDetailsPageSkeleton';
+import { cn } from '../../lib/utils';
 
 export const ProductDetailsPage = () => {
 	const { id } = useParams();
+	const { updateCartCount } = useCart();
+
 	const [product, setProduct] = useState(null);
 	const [color, setColor] = useState('');
 	const [storage, setStorage] = useState('');
 
 	useEffect(() => {
 		const loadProduct = async () => {
-			const data = await getProductDetails(id);
-			setProduct(data);
-			if (data?.options.colors?.length > 0) setColor(data?.options.colors[0].code);
-			if (data?.options.storages?.length > 0) setStorage(data?.options.storages[0].code);
+			try {
+				const data = await getProductDetails(id);
+				setProduct(data);
+				if (data?.options.colors?.length > 0) setColor(data?.options.colors[0].code);
+				if (data?.options.storages?.length > 0) setStorage(data?.options.storages[0].code);
+			} catch (error) {
+				console.log('[getProductDetails]', error);
+				toast.error('Error getting the products');
+			}
 		};
 		loadProduct();
 	}, [id]);
 
 	const handleAddToCart = async () => {
-		console.log('addToCart');
+		if (!color || !storage) return;
+
+		try {
+			const response = await addToCart(product.id, color, storage);
+			if (response) {
+				updateCartCount((count) => count + response?.count);
+				toast.success(`Product added to cart.`);
+			}
+		} catch (error) {
+			toast.error(`Error adding to cart.`);
+			console.log('[addToCart]', error);
+		}
 	};
 
-	if (!product) return <div>Cargando...</div>;
+	if (!product) return <ProductDetailsPageSkeleton />;
 
 	return (
 		<div className='w-full max-w-7xl mx-auto mt-10 px-5 mb-5'>
