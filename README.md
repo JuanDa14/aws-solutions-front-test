@@ -1,5 +1,4 @@
 
-````markdown
 # Mini Aplicación de Compra de Dispositivos Móviles
 
 ## Descripción
@@ -21,7 +20,6 @@ Sigue los pasos a continuación para ejecutar el proyecto localmente:
    git clone https://github.com/JuanDa14/aws-solutions-front-test.git
    cd aws-solutions-front-test
    ```
-````
 
 2. **Instalar dependencias:**
    Asegúrate de tener Node.js instalado y ejecuta:
